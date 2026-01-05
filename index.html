@@ -1,0 +1,799 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b0b0f" />
+  <title>바이브 코딩 — 예쁘게 만들고, 빠르게 출시하세요</title>
+  <meta name="description" content="바이브 코딩은 대화를 바탕으로 프로덕션 수준의 코드를 만들어주는 프리미엄 랜딩페이지 경험을 제공합니다." />
+
+  <style>
+    :root{
+      --bg: #0b0b0f;
+      --bg2:#07070a;
+      --card:#111117cc;
+      --card2:#0f0f14cc;
+      --text:#f5f5f7;
+      --muted:#a6a6b3;
+      --hair:#ffffff14;
+      --shadow: 0 30px 80px rgba(0,0,0,.55);
+      --shadow2: 0 16px 40px rgba(0,0,0,.45);
+      --radius: 26px;
+      --radius2: 18px;
+      --max: 1120px;
+      --ease: cubic-bezier(.22,.9,.25,1);
+      --accent: #7c5cff;
+      --accent2:#34d4ff;
+      --good:#41e1a1;
+      --warn:#ffd27a;
+    }
+
+    @media (prefers-color-scheme: light){
+      :root{
+        --bg:#f7f7fb;
+        --bg2:#ffffff;
+        --card:#ffffffcc;
+        --card2:#ffffffcc;
+        --text:#0b0b0f;
+        --muted:#515165;
+        --hair:#0b0b0f12;
+        --shadow: 0 30px 80px rgba(15,15,25,.12);
+        --shadow2: 0 16px 40px rgba(15,15,25,.10);
+      }
+      body{ background: radial-gradient(1200px 800px at 50% -10%, rgba(124,92,255,.18), transparent 55%),
+                     radial-gradient(900px 700px at 10% 0%, rgba(52,212,255,.14), transparent 55%),
+                     linear-gradient(180deg, var(--bg2), var(--bg)); }
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+                   Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background:
+        radial-gradient(1200px 800px at 50% -10%, rgba(124,92,255,.22), transparent 55%),
+        radial-gradient(900px 700px at 12% 0%, rgba(52,212,255,.16), transparent 55%),
+        radial-gradient(800px 600px at 88% 10%, rgba(65,225,161,.10), transparent 55%),
+        linear-gradient(180deg, var(--bg2), var(--bg));
+      overflow-x:hidden;
+    }
+
+    .noise{
+      pointer-events:none;
+      position:fixed;
+      inset:-50%;
+      opacity:.08;
+      mix-blend-mode: overlay;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E");
+      animation: drift 14s linear infinite;
+    }
+    @keyframes drift{ from{ transform:translate3d(0,0,0);} to{ transform:translate3d(6%,4%,0);} }
+
+    a{ color:inherit; text-decoration:none; }
+    .container{ width:min(var(--max), calc(100% - 48px)); margin:0 auto; }
+
+    /* Nav */
+    .nav{
+      position:sticky;
+      top:0;
+      z-index:50;
+      backdrop-filter:saturate(180%) blur(18px);
+      -webkit-backdrop-filter:saturate(180%) blur(18px);
+      border-bottom: 1px solid var(--hair);
+      background: linear-gradient(180deg, rgba(10,10,14,.72), rgba(10,10,14,.50));
+    }
+    @media (prefers-color-scheme: light){
+      .nav{ background: linear-gradient(180deg, rgba(255,255,255,.82), rgba(255,255,255,.62)); }
+    }
+    .nav-inner{
+      display:flex; align-items:center; justify-content:space-between;
+      height:56px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      letter-spacing:.2px;
+      font-weight:600;
+    }
+    .logo{
+      width:20px; height:20px; border-radius:6px;
+      background: conic-gradient(from 220deg, var(--accent), var(--accent2), var(--good), var(--accent));
+      box-shadow: 0 10px 30px rgba(124,92,255,.25);
+    }
+    .nav-links{
+      display:flex; align-items:center; gap:22px;
+      font-size:13px;
+      color: var(--muted);
+    }
+    .nav-links a{ padding:8px 6px; border-radius:10px; }
+    .nav-links a:hover{ color:var(--text); background: var(--hair); }
+
+    .nav-cta{
+      display:flex; align-items:center; gap:10px;
+    }
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center;
+      gap:10px;
+      height:34px;
+      padding:0 14px;
+      border-radius:999px;
+      font-size:13px;
+      font-weight:600;
+      border:1px solid var(--hair);
+      background: rgba(255,255,255,.06);
+      transition: transform .25s var(--ease), background .25s var(--ease), border-color .25s var(--ease);
+      user-select:none;
+      white-space:nowrap;
+    }
+    .btn:hover{ transform: translateY(-1px); background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.18); }
+    .btn.primary{
+      border:none;
+      background: linear-gradient(135deg, rgba(124,92,255,.95), rgba(52,212,255,.85));
+      color:#0b0b0f;
+      box-shadow: 0 18px 40px rgba(124,92,255,.22), 0 10px 24px rgba(52,212,255,.14);
+    }
+    .btn.primary:hover{ transform: translateY(-1px) scale(1.01); }
+    .btn.ghost{ background: transparent; }
+
+    /* Mobile menu */
+    .burger{ display:none; }
+    @media (max-width: 860px){
+      .nav-links{ display:none; }
+      .burger{ display:inline-flex; }
+    }
+
+    /* Hero */
+    .hero{ padding: 84px 0 32px; }
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: 28px;
+      align-items:center;
+    }
+    @media (max-width: 960px){
+      .hero{ padding-top: 64px; }
+      .hero-grid{ grid-template-columns: 1fr; }
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border:1px solid var(--hair);
+      border-radius:999px;
+      background: rgba(255,255,255,.04);
+      color: var(--muted);
+      font-size:12px;
+      letter-spacing:.2px;
+    }
+    .dot{
+      width:7px; height:7px; border-radius:99px;
+      background: var(--good);
+      box-shadow: 0 0 0 6px rgba(65,225,161,.12);
+    }
+
+    h1{
+      margin: 14px 0 10px;
+      font-size: clamp(38px, 5vw, 64px);
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+    }
+    .subhead{
+      margin: 0 0 22px;
+      font-size: 18px;
+      line-height: 1.5;
+      color: var(--muted);
+      max-width: 52ch;
+    }
+
+    .hero-actions{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .note{ margin-top: 14px; font-size: 12px; color: var(--muted); }
+
+    /* Preview */
+    .preview{
+      border-radius: var(--radius);
+      border:1px solid var(--hair);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      position:relative;
+      min-height: 360px;
+    }
+    .preview::before{
+      content:"";
+      position:absolute; inset:-2px;
+      background: radial-gradient(600px 300px at 30% 10%, rgba(124,92,255,.26), transparent 60%),
+                  radial-gradient(450px 260px at 80% 20%, rgba(52,212,255,.18), transparent 65%);
+      pointer-events:none;
+    }
+    .chrome{
+      height: 44px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--hair);
+      background: rgba(0,0,0,.18);
+    }
+    @media (prefers-color-scheme: light){
+      .chrome{ background: rgba(255,255,255,.55); }
+    }
+    .pill{ width:10px; height:10px; border-radius:99px; background: rgba(255,255,255,.18); }
+    .screen{ padding: 18px; }
+    .codecard{
+      border-radius: 20px;
+      border:1px solid var(--hair);
+      background: rgba(0,0,0,.22);
+      padding: 14px 14px 12px;
+      box-shadow: var(--shadow2);
+    }
+    @media (prefers-color-scheme: light){
+      .codecard{ background: rgba(245,245,250,.8); }
+    }
+    .code-top{
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    pre{
+      margin:0;
+      overflow:auto;
+      font-size: 12.5px;
+      line-height: 1.55;
+      color: var(--text);
+      tab-size:2;
+      white-space: pre;
+    }
+    .hl1{ color: rgba(52,212,255,.95); }
+    .hl2{ color: rgba(65,225,161,.95); }
+    .hl3{ color: rgba(255,210,122,.95); }
+    .hl4{ color: rgba(124,92,255,.98); }
+
+    .chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top: 14px; }
+    .chip{
+      font-size: 12px;
+      color: var(--muted);
+      border:1px solid var(--hair);
+      background: rgba(255,255,255,.04);
+      padding: 8px 10px;
+      border-radius: 999px;
+    }
+
+    /* Social proof */
+    .proof{
+      padding: 18px 0 8px;
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing:.2px;
+    }
+    .logos{
+      margin-top: 10px;
+      display:grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      opacity:.9;
+    }
+    .logo-tile{
+      border-radius: 14px;
+      border: 1px solid var(--hair);
+      background: rgba(255,255,255,.03);
+      padding: 12px;
+      text-align:center;
+      font-weight:600;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    @media (max-width: 860px){
+      .logos{ grid-template-columns: repeat(3, 1fr); }
+    }
+
+    section{ padding: 64px 0; }
+    .section-title{
+      font-size: 34px;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin: 0 0 12px;
+    }
+    .section-sub{
+      margin: 0 0 26px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+      max-width: 70ch;
+    }
+
+    /* Tiles */
+    .tiles{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+    .tile{
+      grid-column: span 6;
+      border-radius: var(--radius);
+      border: 1px solid var(--hair);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      box-shadow: var(--shadow2);
+      overflow:hidden;
+      position:relative;
+      min-height: 300px;
+      transition: transform .35s var(--ease), box-shadow .35s var(--ease);
+    }
+    .tile:hover{ transform: translateY(-4px); box-shadow: var(--shadow); }
+    .tile.wide{ grid-column: span 12; min-height: 340px; }
+    .tile.small{ min-height: 260px; }
+    @media (max-width: 980px){
+      .tile{ grid-column: span 12; }
+    }
+    .tile-inner{ padding: 26px; position:relative; z-index:2; }
+    .eyebrow{
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+    }
+    .tile h3{
+      margin: 10px 0 10px;
+      font-size: 28px;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+    }
+    .tile p{ margin: 0; color: var(--muted); line-height: 1.55; max-width: 62ch; }
+
+    .blob{
+      position:absolute;
+      inset:auto -80px -120px auto;
+      width: 420px; height: 420px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 30%, rgba(52,212,255,.55), transparent 55%),
+                  radial-gradient(circle at 70% 60%, rgba(124,92,255,.55), transparent 58%),
+                  radial-gradient(circle at 50% 80%, rgba(65,225,161,.35), transparent 65%);
+      opacity: .85;
+      transform: rotate(12deg);
+      pointer-events:none;
+    }
+    .blob.left{
+      inset: auto auto -120px -120px;
+      transform: rotate(-8deg);
+      background: radial-gradient(circle at 30% 30%, rgba(255,210,122,.45), transparent 55%),
+                  radial-gradient(circle at 70% 60%, rgba(124,92,255,.50), transparent 58%),
+                  radial-gradient(circle at 50% 80%, rgba(52,212,255,.28), transparent 65%);
+    }
+    .shine{
+      position:absolute;
+      inset: -30% -30% auto auto;
+      width: 520px; height: 520px;
+      background: radial-gradient(circle at 40% 40%, rgba(255,255,255,.20), transparent 55%);
+      transform: rotate(12deg);
+      opacity:.35;
+      pointer-events:none;
+    }
+
+    .features{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-top: 18px;
+    }
+    .feat{
+      border-radius: var(--radius2);
+      border: 1px solid var(--hair);
+      background: rgba(255,255,255,.03);
+      padding: 16px;
+    }
+    .feat strong{ display:block; margin-bottom: 6px; }
+    .feat span{ color: var(--muted); font-size: 13px; line-height: 1.5; display:block; }
+    @media (max-width: 900px){
+      .features{ grid-template-columns: 1fr; }
+    }
+
+    .quotes{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .quote{
+      border-radius: var(--radius);
+      border: 1px solid var(--hair);
+      background: rgba(255,255,255,.03);
+      padding: 20px;
+      box-shadow: var(--shadow2);
+    }
+    .quote p{ margin:0 0 14px; color: var(--text); line-height:1.55; }
+    .quote .who{ color: var(--muted); font-size: 13px; }
+    @media (max-width: 980px){
+      .quotes{ grid-template-columns: 1fr; }
+    }
+
+    .pricing{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+    .plan{
+      border-radius: var(--radius);
+      border: 1px solid var(--hair);
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+      padding: 22px;
+      box-shadow: var(--shadow2);
+      position:relative;
+      overflow:hidden;
+    }
+    .plan.featured{
+      border-color: rgba(124,92,255,.35);
+      box-shadow: 0 30px 90px rgba(124,92,255,.16);
+    }
+    .badge{
+      position:absolute;
+      top: 16px; right: 16px;
+      font-size: 11px;
+      font-weight:700;
+      color:#0b0b0f;
+      background: linear-gradient(135deg, rgba(255,210,122,.95), rgba(65,225,161,.85));
+      padding: 6px 10px;
+      border-radius:999px;
+    }
+    .plan h4{ margin: 0 0 10px; font-size: 16px; letter-spacing:.2px; }
+    .price{ font-size: 34px; letter-spacing:-0.02em; margin: 0 0 12px; }
+    .price small{ font-size: 13px; color: var(--muted); }
+    .ul{
+      margin: 12px 0 18px;
+      padding:0;
+      list-style:none;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .ul li{ display:flex; gap:10px; margin: 8px 0; }
+    .check{
+      width:18px; height:18px; border-radius:6px;
+      border:1px solid var(--hair);
+      display:inline-flex; align-items:center; justify-content:center;
+      color: var(--good);
+      flex:0 0 auto;
+    }
+    @media (max-width: 980px){
+      .pricing{ grid-template-columns: 1fr; }
+    }
+
+    .faq{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+    details{
+      border-radius: var(--radius2);
+      border: 1px solid var(--hair);
+      background: rgba(255,255,255,.03);
+      padding: 14px 14px;
+    }
+    summary{
+      cursor:pointer;
+      font-weight:600;
+      outline:none;
+      list-style:none;
+    }
+    summary::-webkit-details-marker{ display:none; }
+    details p{
+      margin: 10px 0 0;
+      color: var(--muted);
+      line-height:1.6;
+      font-size: 13px;
+    }
+    @media (max-width: 980px){
+      .faq{ grid-template-columns: 1fr; }
+    }
+
+    footer{
+      padding: 34px 0 44px;
+      border-top: 1px solid var(--hair);
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .foot{ display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+    .foot a{ color: var(--muted); }
+    .foot a:hover{ color: var(--text); }
+
+    .reveal{ opacity:0; transform: translateY(12px); }
+    .reveal.on{ opacity:1; transform: translateY(0); transition: opacity .8s var(--ease), transform .8s var(--ease); }
+
+    @media (prefers-reduced-motion: reduce){
+      .noise{ display:none; }
+      .btn, .tile, .reveal{ transition:none !important; }
+      .reveal{ opacity:1; transform:none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <a class="brand" href="#top" aria-label="바이브 코딩 홈">
+        <span class="logo" aria-hidden="true"></span>
+        <span>바이브 코딩</span>
+      </a>
+
+      <nav class="nav-links" aria-label="주 메뉴">
+        <a href="#product">제품</a>
+        <a href="#workflow">워크플로</a>
+        <a href="#pricing">요금</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <div class="nav-cta">
+        <a class="btn ghost" href="#pricing">요금 보기</a>
+        <a class="btn primary" href="#get-started">시작하기</a>
+        <a class="btn burger" id="menuBtn" href="javascript:void(0)" aria-label="메뉴 열기">메뉴</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="reveal">
+          <div class="kicker">
+            <span class="dot" aria-hidden="true"></span>
+            <span>신규 • 바이브 스튜디오 1.0 출시</span>
+          </div>
+
+          <h1>예쁘게 만들고,<br/>빠르게 출시하세요.</h1>
+          <p class="subhead">
+            바이브 코딩은 대화를 바탕으로 프로덕션 수준의 코드를 만들어줍니다.
+            깔끔한 구조, 프리미엄 UI, 부담 없는 워크플로까지 한 번에.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn primary" href="#get-started">프로젝트 시작</a>
+            <a class="btn" href="#product">데모 보기</a>
+          </div>
+
+          <div class="note">카드 등록 없이 시작 • 기존 스택과 호환 • 기본은 프라이빗</div>
+
+          <div class="proof">
+            앱, 강의, 콘텐츠를 만드는 팀이 선택하는 “정돈된 속도”.
+            <div class="logos" aria-label="예시 로고">
+              <div class="logo-tile">Studio</div>
+              <div class="logo-tile">Labs</div>
+              <div class="logo-tile">Craft</div>
+              <div class="logo-tile">Nova</div>
+              <div class="logo-tile">Orbit</div>
+              <div class="logo-tile">Vertex</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="preview reveal" aria-label="제품 미리보기">
+          <div class="shine" aria-hidden="true"></div>
+          <div class="chrome" aria-hidden="true">
+            <span class="pill"></span><span class="pill"></span><span class="pill"></span>
+            <span style="margin-left:10px; color:var(--muted); font-size:12px;">vibe://new-project</span>
+          </div>
+          <div class="screen">
+            <div class="codecard">
+              <div class="code-top">
+                <span>프롬프트 → UI → 코드</span>
+                <span style="display:flex; gap:8px; align-items:center;">
+                  <span style="width:8px;height:8px;border-radius:99px;background:var(--accent2);opacity:.9;"></span>
+                  실시간 미리보기
+                </span>
+              </div>
+<pre><code><span class="hl4">프리미엄</span> 느낌의 랜딩페이지를 만들어줘.
+여백은 넉넉하게, 그라디언트는 은은하게,
+타이포는 또렷하게.
+
+섹션:
+- <span class="hl2">히어로</span>, <span class="hl2">타일 그리드</span>, <span class="hl2">요금제</span>, <span class="hl2">FAQ</span>
+
+요구:
+- 접근성 있는 HTML
+- 반응형 레이아웃
+- 부드러운 마이크로 인터랙션</code></pre>
+            </div>
+
+            <div class="chips" aria-label="하이라이트">
+              <div class="chip">정돈된 레이아웃</div>
+              <div class="chip">다크/라이트 지원</div>
+              <div class="chip">스크롤 리빌</div>
+              <div class="chip">바로 쓰는 카피</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TILES -->
+    <section id="product">
+      <div class="container">
+        <div class="reveal">
+          <h2 class="section-title">바이브 하나로, 필요한 건 다.</h2>
+          <p class="section-sub">
+            차분한 디자인, 깨끗한 코드, 명확한 메시지.
+            “퀄리티를 유지하면서 빠르게”를 위해 설계했습니다.
+          </p>
+        </div>
+
+        <div class="tiles">
+          <article class="tile wide reveal">
+            <div class="blob" aria-hidden="true"></div>
+            <div class="tile-inner">
+              <div class="eyebrow">Vibe Studio</div>
+              <h3>아이디어에서 페이지까지, 잡음 없이.</h3>
+              <p>
+                몇 줄로 시작해도 전체 구조가 단단하게 잡힙니다.
+                여백, 계층, 컴포넌트가 “비싸 보이는” 느낌으로 정리됩니다.
+              </p>
+
+              <div class="features" style="margin-top:18px;">
+                <div class="feat">
+                  <strong>스마트 섹션</strong>
+                  <span>히어로, 타일, 요금제, FAQ—바로 커스텀.</span>
+                </div>
+                <div class="feat">
+                  <strong>디자인 시스템</strong>
+                  <span>라운드/그림자/타이포가 일관되게.</span>
+                </div>
+                <div class="feat">
+                  <strong>기본 접근성</strong>
+                  <span>시맨틱, 대비, 모션 최소화 지원.</span>
+                </div>
+              </div>
+
+              <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+                <a class="btn primary" href="#get-started">지금 만들기</a>
+                <a class="btn" href="#workflow">워크플로 보기</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="tile reveal">
+            <div class="blob left" aria-hidden="true"></div>
+            <div class="tile-inner">
+              <div class="eyebrow">Typography</div>
+              <h3>명확함이 곧 설득력.</h3>
+              <p>
+                큰 제목, 편안한 행간, 충분한 대비.
+                메시지가 ‘한 번에’ 읽히도록 설계했습니다.
+              </p>
+            </div>
+          </article>
+
+          <article class="tile reveal">
+            <div class="blob" style="width:360px;height:360px; inset:auto -120px -140px auto; opacity:.75;" aria-hidden="true"></div>
+            <div class="tile-inner">
+              <div class="eyebrow">Components</div>
+              <h3>미니멀하지만, 밋밋하지 않게.</h3>
+              <p>
+                은은한 그라디언트와 부드러운 인터랙션.
+                무거운 프레임워크 없이도 프리미엄을 만듭니다.
+              </p>
+            </div>
+          </article>
+
+          <article class="tile small reveal">
+            <div class="tile-inner">
+              <div class="eyebrow">Performance</div>
+              <h3>가볍게, 빠르게.</h3>
+              <p>CSS는 가볍게. JS는 최소로. 모바일도 매끈하게.</p>
+              <div class="features" style="grid-template-columns:1fr; margin-top:14px;">
+                <div class="feat"><strong>의존성 0</strong><span>HTML 한 파일로 완성.</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="tile small reveal">
+            <div class="tile-inner">
+              <div class="eyebrow">Brand</div>
+              <h3>당신의 바이브로.</h3>
+              <p>컬러/카피/타일을 몇 분 만에 교체하세요.</p>
+              <div class="features" style="grid-template-columns:1fr; margin-top:14px;">
+                <div class="feat"><strong>테마 토큰</strong><span>변수 몇 개로 분위기 완성.</span></div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- WORKFLOW -->
+    <section id="workflow">
+      <div class="container">
+        <div class="reveal">
+          <h2 class="section-title">가볍게 시작하고, 깔끔하게 마무리.</h2>
+          <p class="section-sub">
+            원하는 방향을 말하면, 형태가 잡히고, 다듬으면 완성됩니다.
+            “의도한 디자인”으로 보이게 만드는 흐름입니다.
+          </p>
+        </div>
+
+        <div class="tiles">
+          <article class="tile reveal">
+            <div class="tile-inner">
+              <div class="eyebrow">1. 설명</div>
+              <h3>짧게 말하세요.</h3>
+              <p>
+                “프리미엄 랜딩페이지로.” 대상과 CTA만 추가하면 충분합니다.
+              </p>
+            </div>
+          </article>
+
+          <article class="tile reveal">
+            <div class="tile-inner">
+              <div class="eyebrow">2. 구성</div>
+              <h3>첫 결과물은 ‘정돈되게’.</h3>
+              <p>
+                구조/여백/섹션이 자동으로 정렬되어, 바로 배포하거나 수정할 수 있어요.
+              </p>
+            </div>
+          </article>
+
+          <article class="tile reveal">
+            <div class="tile-inner">
+              <div class="eyebrow">3. 마감</div>
+              <h3>당신의 톤으로 다듬기.</h3>
+              <p>
+                카피만 바꿔도 분위기가 변합니다. 이미지/색상을 얹어 완성도를 올리세요.
+              </p>
+            </div>
+          </article>
+
+          <article class="tile wide reveal">
+            <div class="blob" aria-hidden="true"></div>
+            <div class="tile-inner">
+              <div class="eyebrow">출시</div>
+              <h3>복사 → 배포 → 끝.</h3>
+              <p>
+                이 페이지는 한 파일입니다. GitHub Pages / Netlify / Vercel 어디든 올리면 끝.
+                가볍고 유지보수도 쉽습니다.
+              </p>
+              <div style="margin-top:18px; display:flex; gap:10px; flex-wrap:wrap;">
+                <a class="btn primary" href="#get-started">시작하기</a>
+                <a class="btn" href="#pricing">요금 보기</a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section>
+      <div class="container">
+        <div class="reveal">
+          <h2 class="section-title">“빠르게, 그런데 고급스럽게.”</h2>
+          <p class="section-sub">
+            제작자와 교육자, 개발자가 가장 귀찮아하는 부분을 대신 정리합니다.
+          </p>
+        </div>
+
+        <div class="quotes">
+          <div class="quote reveal">
+            <p>“기본 상태부터 프리미엄 느낌이라, 카피만 바꾸고 바로 썼어요.”</p>
+            <div class="who">— 크리에이터</div>
+          </div>
+          <div class="quote reveal">
+            <p>“여백과 계층이 안정적이라, 디자인 시간 자체가 확 줄었습니다.”</p>
+            <div class="who">— 디자이너</div>
+          </div>
+          <div class="quote reveal">
+            <p>“가볍고 읽기 좋아요. 랜딩페이지는 이 정도가 딱입니다.”</p>
+            <div class="who">— 개발자</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing">
+      <div class="container">
+        <div class="reveal">
+          <h2 class="section-title">요금제는 심플하게.</h2>
